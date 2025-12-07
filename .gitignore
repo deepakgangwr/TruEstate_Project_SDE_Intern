@@ -1,0 +1,16 @@
+# Ignore Dependencies in any folder
+node_modules/
+package-lock.json
+
+# Ignore Build Outputs
+dist/
+build/
+
+# Ignore Environment Variables (Security)
+.env
+.env.local
+
+
+# Other
+.DS_Store
+.vscode/
