@@ -1,16 +1,36 @@
-# Ignore Dependencies in any folder
+# Dependencies
 node_modules/
-package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Ignore Build Outputs
-dist/
-build/
-
-# Ignore Environment Variables (Security)
+# Environment variables
 .env
 .env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
+# Build outputs
+dist/
+build/
+*.log
 
-# Other
-.DS_Store
+# IDE
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+*.pem
+.cache/

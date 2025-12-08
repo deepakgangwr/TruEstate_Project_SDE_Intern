@@ -82,12 +82,6 @@ const Sidebar = () => {
       </div>
       </nav>
 
-      {/* User Profile */}
-      <div className="p-4 border-t border-gray-100 mt-auto">
-        <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-lg border border-gray-100">
-          <div className="w-8 h-8 rounded-full bg-gray-300 border border-white shadow-sm" />
-        </div>
-      </div>
     </div>
   );
 };
