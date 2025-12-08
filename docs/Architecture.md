@@ -105,7 +105,8 @@ The frontend is built as a **Single Page Application (SPA)** using React, follow
 │   │   ├── 📁 utils/           # Helper functions (QueryBuilder)
 │   │   └── 📄 index.js         # App entry point
 │   ├── 📄 package.json
-│   ├── 📄 vercel.json          # Deployment config
+    ├── 📄 README.md   
+│   ├── 📄 redner.yaml          # Deployment config
 │   └── 📄 seed.js              # Data seeding script
 │
 ├── 📁 frontend/

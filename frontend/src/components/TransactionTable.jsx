@@ -1,5 +1,34 @@
-import React from 'react';
-import { Paperclip } from 'lucide-react';
+import React, { useState } from 'react';
+import { Copy, Check } from 'lucide-react';
+
+const CopyButton = ({ text, className = "" }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async (e) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className={`inline-flex items-center justify-center p-1 rounded hover:bg-gray-100 transition-colors ${className}`}
+      title="Copy to clipboard"
+    >
+      {copied ? (
+        <Check size={12} className="text-green-600" />
+      ) : (
+        <Copy size={12} className="text-gray-400 hover:text-gray-600" />
+      )}
+    </button>
+  );
+};
 
 const TransactionTable = ({ data, loading }) => {
   if (loading) return (
@@ -49,10 +78,12 @@ const TransactionTable = ({ data, loading }) => {
               <td className="px-6 py-4 text-gray-900 font-medium text-sm">
                 {item.customer.name}
               </td>
-              {/* Phone with Paperclip Icon */}
-              <td className="px-6 py-4 text-gray-500 text-xs font-mono flex items-center gap-2">
-                {item.customer.phone}
-                <Paperclip size={12} className="text-gray-400 rotate-45" />
+              {/* Phone with Copy Button */}
+              <td className="px-6 py-4 text-gray-500 text-xs font-mono">
+                <div className="flex items-center gap-2">
+                  <span>{item.customer.phone}</span>
+                  <CopyButton text={item.customer.phone} />
+                </div>
               </td>
               <td className="px-6 py-4 text-gray-600 text-sm">
                 {item.customer.gender}

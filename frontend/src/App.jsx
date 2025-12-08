@@ -7,7 +7,7 @@ import TransactionTable from './components/TransactionTable';
 import Pagination from './components/Pagination';
 import { Info } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/transactions';
+const API_BASE_URL =  'https://truestate-project-sde-intern1.onrender.com/api/transactions';
 
 function App() {
   const [data, setData] = useState([]);
