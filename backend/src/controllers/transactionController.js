@@ -8,7 +8,7 @@ export const getTransactions = async (req, res) => {
     console.error(error);
     res.status(500).json({ 
       success: false, 
-      message: 'Server Error processing transactions' 
+      message: 'Server Error ' 
     });
   }
 };
@@ -21,7 +21,7 @@ export const getFilterOptions = async (req, res) => {
     console.error(error);
     res.status(500).json({ 
       success: false, 
-      message: 'Could not load filter options' 
+      message: 'error loading filter options' 
     });
   }
 };
