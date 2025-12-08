@@ -11,7 +11,9 @@ This project is a high-performance **Retail Sales Dashboard** engineered using t
 * **Frontend:** React (Vite), Tailwind CSS, Lucide Icons, Axios
 * **Backend:** Node.js, Express.js, REST API architecture
 * **Database:** MongoDB Atlas (Mongoose ODM)
-* **Deployment:** Vercel (Serverless Configuration)
+* **Deployment:** 
+  * **Backend:** Render (Web Service)
+  * **Frontend:** Netlify (Static Site Hosting)
 
 ---
 
@@ -94,3 +96,174 @@ npm install
 # Start the React Application
 npm run dev
 ```
+
+---
+
+## 9. Deployment Instructions
+
+### Backend Deployment on Render
+
+#### Prerequisites
+* GitHub repository with your code
+* MongoDB Atlas account and connection string
+* Render account (free tier available)
+
+#### Step 1: Prepare Backend for Render
+1. Ensure your `backend/src/index.js` binds to `0.0.0.0`:
+   ```javascript
+   app.listen(PORT, '0.0.0.0', () => {
+     console.log(`Server running on port ${PORT}`);
+   });
+   ```
+
+2. Verify `backend/render.yaml` exists (optional but recommended):
+   ```yaml
+   services:
+     - type: web
+       name: truestate-backend
+       env: node
+       buildCommand: npm install
+       startCommand: npm start
+       envVars:
+         - key: NODE_ENV
+           value: production
+         - key: PORT
+           value: 5000
+         - key: MONGO_URI
+           sync: false  # Set this in Render dashboard
+   ```
+
+#### Step 2: Deploy on Render
+1. **Create New Web Service:**
+   - Go to [Render Dashboard](https://dashboard.render.com/)
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repository
+
+2. **Configure Service:**
+   - **Name:** `truestate-backend` (or your preferred name)
+   - **Root Directory:** `backend`
+   - **Environment:** `Node`
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+   - **Node Version:** `22.16.0` (or latest LTS)
+
+3. **Set Environment Variables:**
+   - Click "Environment" tab
+   - Add the following:
+     - `NODE_ENV` = `production`
+     - `PORT` = `5000` (Render will override this automatically)
+     - `MONGO_URI` = `your_mongodb_atlas_connection_string`
+
+4. **Deploy:**
+   - Click "Create Web Service"
+   - Render will automatically build and deploy
+   - Wait for deployment to complete (~5-10 minutes)
+   - Your backend URL will be: `https://your-service-name.onrender.com`
+
+#### Step 3: Verify Backend Deployment
+- Visit your Render service URL
+- You should see: `TruEstate API is running...`
+- Test API endpoint: `https://your-service-name.onrender.com/api/transactions`
+
+#### Important Notes:
+- Render free tier services **spin down after 15 minutes of inactivity**
+- First request after spin-down may take 30-60 seconds (cold start)
+- For production, consider upgrading to a paid plan for always-on service
+
+---
+
+### Frontend Deployment on Netlify
+
+#### Prerequisites
+* GitHub repository with your code
+* Backend API URL from Render deployment
+* Netlify account (free tier available)
+
+#### Step 1: Prepare Frontend for Netlify
+1. Ensure `frontend/netlify.toml` exists:
+   ```toml
+   [build]
+     base = "frontend"
+     command = "npm run build"
+     publish = "frontend/dist"
+
+   [build.environment]
+     NODE_VERSION = "18"
+
+   [[redirects]]
+     from = "/*"
+     to = "/index.html"
+     status = 200
+   ```
+
+2. Verify `frontend/src/App.jsx` has correct API URL:
+   ```javascript
+   const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://your-backend-url.onrender.com/api/transactions';
+   ```
+
+#### Step 2: Deploy on Netlify
+1. **Create New Site:**
+   - Go to [Netlify Dashboard](https://app.netlify.com/)
+   - Click "Add new site" → "Import an existing project"
+   - Connect your GitHub repository
+
+2. **Configure Build Settings:**
+   - **Base directory:** `frontend`
+   - **Build command:** `npm run build`
+   - **Publish directory:** `frontend/dist`
+   - **Node version:** `18` (or latest LTS)
+
+3. **Set Environment Variables:**
+   - Go to "Site settings" → "Environment variables"
+   - Click "Add variable"
+   - Add: `VITE_API_URL` = `https://your-backend-url.onrender.com/api/transactions`
+   - Replace `your-backend-url` with your actual Render backend URL
+
+4. **Deploy:**
+   - Click "Deploy site"
+   - Netlify will automatically build and deploy
+   - Wait for deployment to complete (~2-5 minutes)
+   - Your frontend URL will be: `https://random-name-12345.netlify.app`
+
+#### Step 3: Configure Custom Domain (Optional)
+1. Go to "Site settings" → "Domain management"
+2. Click "Add custom domain"
+3. Follow Netlify's DNS configuration instructions
+
+#### Step 4: Verify Frontend Deployment
+- Visit your Netlify site URL
+- Verify the dashboard loads correctly
+- Test that data loads from your Render backend
+- Check browser console for any CORS or API errors
+
+#### Important Notes:
+- Netlify automatically redeploys on every push to your main branch
+- Environment variables are encrypted and secure
+- Netlify provides free SSL certificates automatically
+- For production, consider setting up a custom domain
+
+---
+
+### Post-Deployment Checklist
+
+#### Backend (Render)
+- [ ] Backend URL is accessible
+- [ ] API endpoints respond correctly (`/api/transactions`, `/api/transactions/options`)
+- [ ] MongoDB connection is working
+- [ ] CORS is configured to allow your Netlify domain
+- [ ] Environment variables are set correctly
+
+#### Frontend (Netlify)
+- [ ] Frontend URL is accessible
+- [ ] Data loads from backend API
+- [ ] Search functionality works
+- [ ] Filters and pagination work correctly
+- [ ] Environment variable `VITE_API_URL` is set correctly
+
+#### Troubleshooting
+- **Backend not accessible:** Check Render logs for errors, verify PORT binding to `0.0.0.0`
+- **CORS errors:** Ensure backend CORS allows your Netlify domain
+- **API not loading:** Verify `VITE_API_URL` environment variable in Netlify dashboard
+- **Build failures:** Check build logs in Render/Netlify dashboard for specific errors
+
+---
