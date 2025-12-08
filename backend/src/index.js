@@ -22,16 +22,20 @@ app.get('/', (req, res) => {
   res.send('TruEstate API is running...');
 });
 
-if (process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT || 5000;
-    connectDB().then(() => {
-        app.listen(PORT, () => {
+const startServer = async () => {
+    try {
+        await connectDB();
+        app.listen(PORT, '0.0.0.0', () => {
             console.log(`Server running on port ${PORT}`);
         });
-    });
-} else {
-    connectDB();
-}
+    } catch (error) {
+        console.error('Failed to start server:', error);
+        process.exit(1);
+    }
+};
+
+// Start server in all environments
+startServer();
 
 export default app;
 
