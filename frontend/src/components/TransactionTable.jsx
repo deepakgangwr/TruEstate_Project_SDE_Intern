@@ -90,3 +90,4 @@ const TransactionTable = ({ data, loading }) => {
 
 export default TransactionTable;
 
+
